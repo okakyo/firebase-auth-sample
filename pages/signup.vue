@@ -1,36 +1,19 @@
 <template>
   <div class="container">
-    <div>
-      <Logo />
-      <h1 class="title">firebase-auth-sample</h1>
-      <div class="links">
-        <a
-          href="https://nuxtjs.org/"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="button--green"
-        >
-          Documentation
-        </a>
-        <a
-          href="https://github.com/nuxt/nuxt.js"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="button--grey"
-        >
-          GitHub
-        </a>
-      </div>
-    </div>
+    <form>
+      <input v-model="email" />
+      <input v-model="password" />
+      <input v-model="passwordVerify" />
+      <button>登録</button>
+    </form>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from '@vue/composition-api'
-export default defineComponent({
-  name: 'IndexPage',
-})
+export default defineComponent({})
 </script>
+
 <style>
 .container {
   margin: 0 auto;
