@@ -20,7 +20,12 @@
         >
           GitHub
         </a>
-        <button target="_blank" rel="noopener noreferrer" class="button--grey">
+        <button
+          target="_blank"
+          rel="noopener noreferrer"
+          class="button--grey"
+          @click="signout"
+        >
           Signout
         </button>
       </div>
@@ -30,8 +35,25 @@
 
 <script lang="ts">
 import { defineComponent } from '@vue/composition-api'
+import { SignOut } from '~/utils/firebase/auth'
+import { injectGlobalState } from '~/utils/states/user'
 export default defineComponent({
   name: 'IndexPage',
+  setup(props: any, { root }) {
+    const state = injectGlobalState()
+    const signout = () => {
+      SignOut()
+        .then(() => {
+          state.cleanUserState()
+        })
+        .catch(() => {
+          alert('ログアウトに失敗しました。')
+        })
+    }
+    return {
+      signout,
+    }
+  },
 })
 </script>
 <style>

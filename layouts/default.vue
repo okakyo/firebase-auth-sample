@@ -18,21 +18,22 @@ export default defineComponent({
     const state = injectGlobalState()
 
     onMounted(() => {
-      auth.onAuthStateChanged((user) => {
-        console.log(user)
-        if (user) {
-          state.setUserState({
-            id: user ? user.uid : '',
-            email: user && user.email ? user.email : '',
-            name: user && user.displayName ? user.displayName : '',
-            thumbnail: user && user.photoURL ? user.photoURL : '',
-          })
-        } else {
-          console.log('Not Authenticated User')
-          root.$router.push('/signin')
-          // TODO : Push to the Login Page;
-        }
-      })
+      if (state.user.value.id === '') {
+        auth.onAuthStateChanged((user) => {
+          if (user) {
+            state.setUserState({
+              id: user ? user.uid : '',
+              email: user && user.email ? user.email : '',
+              name: user && user.displayName ? user.displayName : '',
+              thumbnail: user && user.photoURL ? user.photoURL : '',
+            })
+          } else {
+            console.log('Not Authenticated User')
+            root.$router.push('/signin')
+            // TODO : Push to the Login Page;
+          }
+        })
+      }
     })
   },
 })

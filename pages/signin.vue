@@ -37,8 +37,6 @@ export default defineComponent({
         const emailValue = email.value
         const passwordValue = password.value
         const currentUser = await SigninWithBasic(emailValue, passwordValue)
-        alert('signin')
-        console.log(currentUser)
         if (currentUser.status === 'ok') {
           const userInfo = currentUser.data.user
           console.log(userState)
