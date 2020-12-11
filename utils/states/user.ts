@@ -1,64 +1,65 @@
 import {provide,inject, InjectionKey, reactive, toRefs} from "@vue/composition-api";
 
-type UserType  = {
+export type UserType  = {
     id?:string,
     name:string,
     email:string,
     thumbnail:string,
 }
 
-type ErrorType = {
+export type ErrorType = {
     state:number
     message:string
 }
+export type GlobalStateType = {
+    user:UserType,
+    error?:ErrorType
+}
 
-
-export const UserStateKey:InjectionKey<UserType> =Symbol("UserState");
-export const ErrorStateKey: InjectionKey<ErrorType> = Symbol("ErrorState");
-
-
-export const useUserState = ()=>{
-    const userState =reactive<UserType>({
-        id:"",
-        name:"",
-        email:"",
-        thumbnail:""
+export const useGlobalState = ()=>{
+    const globalState =reactive<GlobalStateType>({
+        user:{
+            id:"",
+            name:"",
+            email:"",
+            thumbnail:""
+        }
     });
-    const setUserState = (state:UserType)=>{
-        userState.id= state.id;
-        userState.name=state.name;
-        userState.email=state.email;
-        userState.thumbnail = state.thumbnail;
-    },
-    const cleanUserState = (state:UserType) =>{
-        userState.id=""; 
-        userState.name="";
-        userState.email="";
-        userState.thumbnail="";
+    const setUserState = (state: UserType)=>{
+        globalState.user.id=state.id;
+        globalState.user.email=state.email;
+        globalState.user.thumbnail=state.thumbnail;
+        globalState.user.name=state.name;
+    }
+    const cleanUserState = () =>{
+        globalState.user={
+            id:"",
+            name:"",
+            email:"",
+            thumbnail:""
+        }
     }
     return {
-        ...toRefs(userState),
+        ...toRefs(globalState),
         setUserState,
         cleanUserState
     }
 }
 
+type StateType = ReturnType<typeof useGlobalState>
 
-export const provideUserState= ()=>{
-    const userState:UserType = {
-        id:"",
-        name:"",
-        email:"",
-        thumbnail:"",
-    }
-    provide(UserStateKey,userState);
+export const GlobalStateKey:InjectionKey<StateType> =Symbol("GlobalState");
+export const ErrorStateKey: InjectionKey<ErrorType> = Symbol("ErrorState");
+
+export const provideGlobalState= ()=>{
+    provide(GlobalStateKey,useGlobalState());
 };
 
-export const injectUserState =()=>{
-    const state = inject(UserStateKey);
+export const injectGlobalState =()=>{
+    const state = inject(GlobalStateKey);
     if(!state){
-        console.error("Unable to install User State");
+        throw Error("Unable to install User State");
     }
     return state;
-
 }
+

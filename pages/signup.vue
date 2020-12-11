@@ -1,17 +1,79 @@
 <template>
   <div class="container">
-    <form>
-      <input v-model="email" />
-      <input v-model="password" />
-      <input v-model="passwordVerify" />
-      <button>登録</button>
-    </form>
+    <div class="card">
+      <h3>メール</h3>
+      <p class="my-input">
+        <input v-model="email" placeholder="" type="email" />
+      </p>
+      <h3>パスワード</h3>
+      <p class="my-input">
+        <input v-model="password" type="password" />
+      </p>
+      <h3>パスワード（確認用）</h3>
+      <p class="my-input">
+        <input v-model="passwordVerify" type="password" />
+      </p>
+      <p class="my-input">
+        <button @click="signUpBasic()">アカウント登録</button>
+      </p>
+    </div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from '@vue/composition-api'
-export default defineComponent({})
+import { defineComponent, ref } from '@vue/composition-api'
+import { SignUpWithBasic } from '~/utils/firebase/auth'
+import { injectGlobalState } from '~/utils/states/user'
+
+export default defineComponent({
+  name: 'SignUpPage',
+  setup(props: any, { root }) {
+    // TODO: この部分を reactive で実装したほうがいいかもしれない
+    const email = ref('')
+    const password = ref('')
+    const passwordVerify = ref('')
+
+    const userState = injectGlobalState()
+
+    const signUpBasic = () => {
+      if (password.value !== passwordVerify.value) {
+        alert('パスワードが違います。')
+      } else {
+        const emailValue = email.value
+        const passwordValue = password.value
+        SignUpWithBasic(emailValue, passwordValue)
+          .then((createdUser) => {
+            console.log(createdUser)
+            if (createdUser.status === 'ok') {
+              const userInfo = createdUser.data.user
+              userState.setUserState({
+                id: userInfo ? userInfo.uid : '',
+                email: userInfo && userInfo.email ? userInfo.email : '',
+                name:
+                  userInfo && userInfo.displayName ? userInfo.displayName : '',
+                thumbnail:
+                  userInfo && userInfo.photoURL ? userInfo.photoURL : '',
+              })
+            } else {
+              alert('アカウント登録失敗')
+            }
+          })
+          .then(() => {
+            root.$router.push('/')
+          })
+          .catch(() => {
+            alert('エラーが発生しました')
+          })
+      }
+    }
+    return {
+      email,
+      password,
+      passwordVerify,
+      signUpBasic,
+    }
+  },
+})
 </script>
 
 <style>

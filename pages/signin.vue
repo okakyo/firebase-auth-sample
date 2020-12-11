@@ -1,25 +1,61 @@
 <template>
   <div class="container">
-    <form class="card">
+    <div class="card">
       <h3>メール</h3>
-      <p><input v-model="email" placeholder="" /></p>
-
-      <h3>パスワード</h3>
-      <p><input v-model="password" /></p>
-      <p>
-        <button>ログイン</button>
+      <p class="my-input">
+        <input v-model="email" placeholder="" type="email" />
       </p>
-    </form>
+      <h3>パスワード</h3>
+      <p class="my-input">
+        <input v-model="password" type="password" />
+      </p>
+      <a href="/signup">アカウントの登録はこちら</a>
+      <p class="my-input">
+        <button @click="loginBasic()">ログイン</button>
+      </p>
+    </div>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, ref } from '@vue/composition-api'
+import { SigninWithBasic } from '@/utils/firebase/auth'
+import { injectGlobalState } from '~/utils/states/user'
 export default defineComponent({
-  setup() {
+  name: 'SigninPage',
+  setup(props: any, { root }) {
+    // local States
     const email = ref('')
     const password = ref('')
-    const loginBasic = () => {}
+
+    // Global States
+    const userState = injectGlobalState()
+    console.log(userState.user)
+    // method Functions
+    const loginBasic = async () => {
+      try {
+        const emailValue = email.value
+        const passwordValue = password.value
+        const currentUser = await SigninWithBasic(emailValue, passwordValue)
+        alert('signin')
+        console.log(currentUser)
+        if (currentUser.status === 'ok') {
+          const userInfo = currentUser.data.user
+          console.log(userState)
+          userState.setUserState({
+            id: userInfo ? userInfo.uid : '',
+            email: userInfo && userInfo.email ? userInfo.email : '',
+            name: userInfo && userInfo.displayName ? userInfo.displayName : '',
+            thumbnail: userInfo && userInfo.photoURL ? userInfo.photoURL : '',
+          })
+          root.$router.push('/')
+        } else {
+          alert('ログイン失敗')
+        }
+      } catch (e) {
+        alert(e)
+      }
+    }
     return {
       email,
       password,
@@ -30,10 +66,15 @@ export default defineComponent({
 </script>
 <style>
 .container {
-  padding: auto;
+  margin: 0 auto;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
 }
-.card {
-  padding: 1rem;
-  border: #f3f3f3;
+.my-input {
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
 }
 </style>

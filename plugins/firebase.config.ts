@@ -1,5 +1,5 @@
-import  Firebase from "~/utils/firebase/app";
-import "~/utils/firebase/auth";
+import  Firebase from "firebase/app";
+import "firebase/auth";
 
 
 const config = {
@@ -12,5 +12,5 @@ const config = {
     appId: "1:36579659671:web:d237da9c5024013d663ed2",
     measurementId: "G-3G0SC7W1XN"
 }
- const firebase = Firebase.initializeApp(config);
+const firebase = Firebase.apps.length? Firebase.app():Firebase.initializeApp(config);
 export const auth = firebase.auth();

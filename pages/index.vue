@@ -20,6 +20,9 @@
         >
           GitHub
         </a>
+        <button target="_blank" rel="noopener noreferrer" class="button--grey">
+          Signout
+        </button>
       </div>
     </div>
   </div>
