@@ -20,6 +20,7 @@ export default defineComponent({
     onMounted(() => {
       if (state.user.value.id === '') {
         auth.onAuthStateChanged((user) => {
+          console.log(user)
           if (user) {
             state.setUserState({
               id: user ? user.uid : '',

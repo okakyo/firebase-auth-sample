@@ -9,7 +9,7 @@
       <p class="my-input">
         <input v-model="password" type="password" />
       </p>
-      <a href="/signup">アカウントの登録はこちら</a>
+      <nuxt-link to="/signup">アカウントの登録はこちら</nuxt-link>
       <p class="my-input">
         <button @click="loginBasic()">ログイン</button>
       </p>
@@ -46,10 +46,10 @@ export default defineComponent({
             name: userInfo && userInfo.displayName ? userInfo.displayName : '',
             thumbnail: userInfo && userInfo.photoURL ? userInfo.photoURL : '',
           })
-          root.$router.push('/')
         } else {
           alert('ログイン失敗')
         }
+        root.$router.push('/')
       } catch (e) {
         alert(e)
       }

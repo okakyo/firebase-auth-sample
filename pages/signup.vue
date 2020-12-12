@@ -13,6 +13,7 @@
       <p class="my-input">
         <input v-model="passwordVerify" type="password" />
       </p>
+      <nuxt-link to="/signin">ログインページに戻る</nuxt-link>
       <p class="my-input">
         <button @click="signUpBasic()">アカウント登録</button>
       </p>
@@ -54,12 +55,10 @@ export default defineComponent({
                 thumbnail:
                   userInfo && userInfo.photoURL ? userInfo.photoURL : '',
               })
+              root.$router.push('/')
             } else {
               alert('アカウント登録失敗')
             }
-          })
-          .then(() => {
-            root.$router.push('/')
           })
           .catch(() => {
             alert('エラーが発生しました')

@@ -13,7 +13,7 @@
     "test": "jest"
   },
   "lint-staged": {
-    "*.{js,vue}": "eslint --fix",
+    "*.{ts,js,vue}": "eslint --fix",
     "*.{css,vue}": "stylelint --fix"
   },
   "husky": {
